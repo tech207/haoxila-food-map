@@ -2,26 +2,34 @@
 @tailwind components;
 @tailwind utilities;
 
-:root {
-  --background: #ffffff;
-  --foreground: #171717;
-}
-
-@media (prefers-color-scheme: dark) {
+@layer base {
   :root {
-    --background: #0a0a0a;
-    --foreground: #ededed;
+    --brand-deep: #3F2218;
+    --brand-mid: #8E4525;
+    --brand-accent: #B85D33;
+    --customer-bg: #FFF8F1;
+    --merchant-dark: #18120F;
+    --card-bg: #FFFFFF;
+  }
+
+  * {
+    box-sizing: border-box;
+  }
+
+  html {
+    font-family: var(--font-inter, ui-sans-serif, system-ui, sans-serif);
+    -webkit-font-smoothing: antialiased;
+  }
+
+  body {
+    margin: 0;
+    padding: 0;
   }
 }
 
-body {
-  color: var(--foreground);
-  background: var(--background);
-  font-family: Arial, Helvetica, sans-serif;
-}
-
 @layer utilities {
-  .text-balance {
-    text-wrap: balance;
+  /* Customer system scroll with bottom nav padding */
+  .customer-scroll {
+    padding-bottom: 4rem; /* 64px for bottom nav */
   }
 }

@@ -1,0 +1,200 @@
+// This is your Prisma schema file,
+// learn more about it in the docs: https://pris.ly/d/prisma-schema
+
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+// ================================
+// ENUMS
+// ================================
+
+enum UserRole {
+  CUSTOMER
+  MERCHANT
+  ADMIN
+}
+
+enum TicketStatus {
+  DRAFT
+  PENDING_REVIEW
+  ACTIVE
+  PAUSED
+  REJECTED
+  EXPIRED
+}
+
+enum OrderStatus {
+  PAID
+  REDEEMED
+  REFUNDED
+  EXPIRED
+}
+
+enum MerchantStatus {
+  PENDING_REVIEW
+  ACTIVE
+  SUSPENDED
+}
+
+// ================================
+// CUSTOMER MODELS
+// ================================
+
+model Customer {
+  id           String   @id @default(cuid())
+  email        String   @unique
+  phone        String?  @unique
+  name         String
+  avatarUrl    String?
+  passwordHash String
+  createdAt    DateTime @default(now())
+  updatedAt    DateTime @updatedAt
+
+  orders  Order[]
+  reviews Review[]
+
+  @@map("customers")
+}
+
+// ================================
+// MERCHANT MODELS
+// ================================
+
+model Merchant {
+  id           String         @id @default(cuid())
+  email        String         @unique
+  name         String
+  passwordHash String
+  status       MerchantStatus @default(PENDING_REVIEW)
+  createdAt    DateTime       @default(now())
+  updatedAt    DateTime       @updatedAt
+
+  store   Store?
+  tickets Ticket[]
+
+  @@map("merchants")
+}
+
+model Store {
+  id          String   @id @default(cuid())
+  merchantId  String   @unique
+  name        String
+  description String?
+  address     String
+  city        String
+  imageUrl    String?
+  phone       String?
+  latitude    Float?
+  longitude   Float?
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
+
+  merchant Merchant @relation(fields: [merchantId], references: [id], onDelete: Cascade)
+  tickets  Ticket[]
+  reviews  Review[]
+
+  @@map("stores")
+}
+
+// ================================
+// TICKET MODELS
+// ================================
+
+model Ticket {
+  id          String       @id @default(cuid())
+  merchantId  String
+  storeId     String
+  title       String
+  description String?
+  imageUrl    String?
+  price       Decimal      @db.Decimal(10, 2)
+  originalPrice Decimal?   @db.Decimal(10, 2)
+  quantity    Int          // total stock
+  sold        Int          @default(0)
+  status      TicketStatus @default(DRAFT)
+  validFrom   DateTime
+  validUntil  DateTime
+  createdAt   DateTime     @default(now())
+  updatedAt   DateTime     @updatedAt
+
+  merchant Merchant @relation(fields: [merchantId], references: [id])
+  store    Store    @relation(fields: [storeId], references: [id])
+  orders   Order[]
+
+  @@map("tickets")
+}
+
+// ================================
+// ORDER & REDEMPTION MODELS
+// ================================
+
+model Order {
+  id          String      @id @default(cuid())
+  customerId  String
+  ticketId    String
+  status      OrderStatus @default(PAID)
+  quantity    Int         @default(1)
+  totalAmount Decimal     @db.Decimal(10, 2)
+  paidAt      DateTime    @default(now())
+  createdAt   DateTime    @default(now())
+  updatedAt   DateTime    @updatedAt
+
+  customer   Customer    @relation(fields: [customerId], references: [id])
+  ticket     Ticket      @relation(fields: [ticketId], references: [id])
+  redemption Redemption?
+  review     Review?
+
+  @@map("orders")
+}
+
+model Redemption {
+  id          String   @id @default(cuid())
+  orderId     String   @unique
+  otpCode     String   // hashed OTP used for redemption
+  redeemedAt  DateTime @default(now())
+  merchantId  String
+
+  order Order @relation(fields: [orderId], references: [id])
+
+  @@map("redemptions")
+}
+
+// ================================
+// REVIEW MODEL (真實核銷後才能留評)
+// ================================
+
+model Review {
+  id         String   @id @default(cuid())
+  customerId String
+  storeId    String
+  orderId    String   @unique // 確保一筆訂單只能留一則評價
+  rating     Int      // 1–5
+  content    String?
+  createdAt  DateTime @default(now())
+
+  customer Customer @relation(fields: [customerId], references: [id])
+  store    Store    @relation(fields: [storeId], references: [id])
+  order    Order    @relation(fields: [orderId], references: [id])
+
+  @@map("reviews")
+}
+
+// ================================
+// ADMIN MODEL
+// ================================
+
+model Admin {
+  id           String   @id @default(cuid())
+  email        String   @unique
+  name         String
+  passwordHash String
+  createdAt    DateTime @default(now())
+
+  @@map("admins")
+}
