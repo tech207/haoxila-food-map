@@ -2,7 +2,7 @@
 
 import Link from "next/link";
 import { usePathname } from "next/navigation";
-import { Ticket } from "lucide-react";
+import { CircleUserRound, Ticket } from "lucide-react";
 
 const navLinks = [
   { href: "/", label: "探索" },
@@ -13,6 +13,7 @@ export function CustomerTopNav({ isLoggedIn = false }: { isLoggedIn?: boolean })
   const pathname = usePathname();
   const mobileLabel =
     pathname.startsWith("/wallet") ? "票夾" : pathname.startsWith("/profile") ? "我的" : "探索";
+  const profileName = "王小美";
 
   return (
     <>
@@ -42,20 +43,38 @@ export function CustomerTopNav({ isLoggedIn = false }: { isLoggedIn?: boolean })
         <div className="ml-auto flex items-center gap-3">
           {isLoggedIn ? (
             <>
-              <Link href="/wallet" className="p-2 text-brand-mid transition-colors hover:text-brand-accent">
+              <Link
+                href="/wallet"
+                className="inline-flex h-11 w-11 items-center justify-center rounded-2xl border border-stone-200 bg-stone-50 text-brand-mid transition hover:border-brand-accent/30 hover:text-brand-accent"
+                aria-label="我的票券"
+              >
                 <Ticket size={20} />
               </Link>
-              <Link href="/profile" className="text-sm font-medium text-brand-mid hover:text-brand-accent">
-                我的帳戶
+              <Link
+                href="/profile"
+                className="inline-flex items-center gap-3 rounded-2xl border border-stone-200 bg-white px-3 py-2 text-sm font-medium text-brand-deep transition hover:border-brand-accent/30 hover:text-brand-accent"
+              >
+                <span className="flex size-9 items-center justify-center rounded-full bg-brand-accent/12 text-brand-accent">
+                  <CircleUserRound size={20} />
+                </span>
+                <span>{profileName}</span>
               </Link>
             </>
           ) : (
-            <Link
-              href="/login"
-              className="rounded-lg bg-brand-accent px-4 py-2 text-sm font-medium text-white transition-colors hover:bg-brand-mid"
-            >
-              登入
-            </Link>
+            <>
+              <Link
+                href="/merchant/login"
+                className="inline-flex h-10 items-center justify-center rounded-xl bg-[#1d100b] px-4 text-sm font-semibold text-white transition hover:bg-[#2a1710]"
+              >
+                商家後台
+              </Link>
+              <Link
+                href="/login"
+                className="inline-flex h-10 items-center justify-center rounded-xl bg-brand-accent px-5 text-sm font-semibold text-white transition hover:bg-brand-mid"
+              >
+                登入
+              </Link>
+            </>
           )}
         </div>
       </header>
@@ -68,9 +87,38 @@ export function CustomerTopNav({ isLoggedIn = false }: { isLoggedIn?: boolean })
           <span className="rounded-full bg-brand-accent/10 px-3 py-1 font-medium text-brand-accent">
             {mobileLabel}
           </span>
-          <Link href={isLoggedIn ? "/wallet" : "/login?next=/wallet"} className="font-medium text-stone-600">
-            票夾
-          </Link>
+          {isLoggedIn ? (
+            <div className="flex items-center gap-2">
+              <Link
+                href="/wallet"
+                className="inline-flex size-9 items-center justify-center rounded-full bg-brand-accent/10 text-brand-accent"
+                aria-label="我的票券"
+              >
+                <Ticket size={18} />
+              </Link>
+              <Link href="/profile" className="inline-flex items-center gap-2 font-medium text-stone-700">
+                <span className="flex size-8 items-center justify-center rounded-full bg-brand-accent/12 text-brand-accent">
+                  <CircleUserRound size={17} />
+                </span>
+                <span>{profileName}</span>
+              </Link>
+            </div>
+          ) : (
+            <div className="flex items-center gap-2">
+              <Link
+                href="/merchant/login"
+                className="inline-flex h-9 items-center justify-center rounded-lg bg-[#1d100b] px-3 text-xs font-semibold text-white"
+              >
+                商家後台
+              </Link>
+              <Link
+                href="/login"
+                className="inline-flex h-9 items-center justify-center rounded-lg bg-brand-accent px-3 text-xs font-semibold text-white"
+              >
+                登入
+              </Link>
+            </div>
+          )}
         </div>
       </header>
     </>

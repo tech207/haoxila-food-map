@@ -6,7 +6,11 @@ import { MerchantSidebar } from "@/components/layout/MerchantSidebar";
 export function MerchantFrame({ children }: { children: React.ReactNode }) {
   const pathname = usePathname();
 
-  if (pathname === "/merchant/login") {
+  if (
+    pathname === "/merchant/login" ||
+    pathname === "/merchant/apply" ||
+    pathname === "/merchant/pricing"
+  ) {
     return <>{children}</>;
   }
 

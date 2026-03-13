@@ -1,8 +1,9 @@
-import Link from "next/link";
 import { notFound, redirect } from "next/navigation";
 import { ChevronLeft } from "lucide-react";
 import { formatDate, formatPrice, getStoreById, getTicketById } from "@/lib/customer-data";
 import { isDemoCustomerLoggedIn } from "@/lib/customer-session";
+import { RestaurantBuyClient } from "@/components/customer/RestaurantBuyClient";
+import Link from "next/link";
 
 export default function RestaurantBuyPage({
   params,
@@ -46,14 +47,9 @@ export default function RestaurantBuyPage({
           <p className="text-2xl font-semibold text-brand-accent">{formatPrice(ticket.price)}</p>
         </div>
         <p className="mt-6 text-sm leading-6 text-stone-500">
-          這裡先保留為確認頁 UI，付款流程可在下一步接金流與正式訂單建立。
+          確認後會立即建立 demo 訂單並同步到票夾，後續可再接正式金流。
         </p>
-        <Link
-          href="/wallet"
-          className="mt-8 inline-flex h-12 items-center justify-center rounded-2xl bg-brand-accent px-5 text-sm font-medium text-white"
-        >
-          前往我的票夾
-        </Link>
+        <RestaurantBuyClient ticketId={ticket.id} />
       </div>
     </div>
   );

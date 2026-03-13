@@ -2,6 +2,7 @@
 
 import { usePathname } from "next/navigation";
 import { CustomerNav } from "@/components/layout/CustomerNav";
+import { CustomerFooter } from "@/components/customer/CustomerFooter";
 
 export function AppFrame({
   children,
@@ -11,8 +12,15 @@ export function AppFrame({
   isLoggedIn: boolean;
 }) {
   const pathname = usePathname();
+  const isPublicMerchantPage =
+    pathname === "/merchant/apply" || pathname === "/merchant/pricing";
   const isCustomerChromeVisible =
-    !pathname.startsWith("/merchant") &&
+    (!pathname.startsWith("/merchant") || isPublicMerchantPage) &&
+    !pathname.startsWith("/admin") &&
+    pathname !== "/login" &&
+    !pathname.startsWith("/wallet/");
+  const isCustomerFooterVisible =
+    (!pathname.startsWith("/merchant") || isPublicMerchantPage) &&
     !pathname.startsWith("/admin") &&
     pathname !== "/login" &&
     !pathname.startsWith("/wallet/");
@@ -21,6 +29,7 @@ export function AppFrame({
     <>
       <CustomerNav isLoggedIn={isLoggedIn} />
       <main className={isCustomerChromeVisible ? "pb-16 pt-0 md:pb-0 md:pt-16" : ""}>{children}</main>
+      {isCustomerFooterVisible ? <CustomerFooter /> : null}
     </>
   );
 }

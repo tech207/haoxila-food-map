@@ -6,8 +6,10 @@ import { CustomerBottomNav } from "@/components/customer/CustomerBottomNav";
 
 export function CustomerNav({ isLoggedIn = false }: { isLoggedIn?: boolean }) {
   const pathname = usePathname();
+  const isPublicMerchantPage =
+    pathname === "/merchant/apply" || pathname === "/merchant/pricing";
   const hidden =
-    pathname.startsWith("/merchant") ||
+    (pathname.startsWith("/merchant") && !isPublicMerchantPage) ||
     pathname.startsWith("/admin") ||
     pathname === "/login" ||
     pathname.startsWith("/wallet/");

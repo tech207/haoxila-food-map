@@ -1,0 +1,7 @@
+HaoXiLa Brand Colors
+
+brand-deep:   #3F2218
+brand-mid:    #8E4525
+brand-accent: #B85D33
+customer-bg:  #FFF8F1
+merchant-dark:#18120F

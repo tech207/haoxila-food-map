@@ -1,5 +1,6 @@
 "use client";
 
+import Link from "next/link";
 import { useMemo, useState } from "react";
 import { MapPin, Search } from "lucide-react";
 import {
@@ -49,6 +50,20 @@ export function ExploreClient({ stores }: ExploreClientProps) {
             <p className="mt-3 max-w-2xl text-sm leading-6 text-white/75 md:text-base">
               用行政區、料理類型與即時搜尋縮小範圍，每張票券都對應到實際可用方案。
             </p>
+            <div className="mt-5 flex flex-wrap gap-3">
+              <Link
+                href="#stores"
+                className="inline-flex h-11 items-center justify-center rounded-2xl bg-white px-5 text-sm font-semibold text-brand-deep transition hover:bg-stone-100"
+              >
+                瀏覽今日優惠 ↓
+              </Link>
+              <Link
+                href="/wallet"
+                className="inline-flex h-11 items-center justify-center rounded-2xl border border-white/20 bg-white/10 px-5 text-sm font-semibold text-white transition hover:bg-white/15"
+              >
+                我的票夾
+              </Link>
+            </div>
           </div>
           <div className="grid gap-4 rounded-[24px] bg-white/8 p-4 backdrop-blur">
             <div className="rounded-[20px] bg-white/10 p-4">
@@ -122,7 +137,7 @@ export function ExploreClient({ stores }: ExploreClientProps) {
         </div>
       </section>
 
-      <section className="mt-6">
+      <section id="stores" className="mt-6 scroll-mt-24">
         <div className="mb-4 flex items-center justify-between">
           <div>
             <h2 className="text-xl font-semibold text-brand-deep">探索餐廳</h2>

@@ -198,3 +198,45 @@ model Admin {
 
   @@map("admins")
 }
+
+model BloggerApplication {
+  id        String   @id @default(cuid())
+  name      String
+  blogUrl   String
+  traffic   String?
+  note      String?
+  status    String   @default("PENDING")
+  createdAt DateTime @default(now())
+
+  @@map("blogger_applications")
+}
+
+model MerchantApplication {
+  id               String   @id @default(cuid())
+  storeName        String
+  category         String
+  address          String
+  district         String
+  contactName      String
+  phone            String
+  email            String
+  monthlyCustomers String?
+  note             String?
+  status           String   @default("PENDING")
+  createdAt        DateTime @default(now())
+
+  @@map("merchant_applications")
+}
+
+model SupportTicket {
+  id        String   @id @default(cuid())
+  name      String
+  email     String
+  category  String
+  orderId   String?
+  message   String   @db.Text
+  status    String   @default("OPEN")
+  createdAt DateTime @default(now())
+
+  @@map("support_tickets")
+}
